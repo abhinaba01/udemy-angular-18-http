@@ -31,12 +31,20 @@ export class PlacesService {
   }
 
   addPlaceToUserPlaces(selectedPlace: Place) {
-    this.userPlaces.update((prevPlaces) => [...prevPlaces, selectedPlace]);
-    
-    return this.http.put<{ userPlaces: Place[] }>(
-      'http://localhost:3000/user-places',
-      { placeId: selectedPlace.id }
-    );
+    const prevPlaces = this.userPlaces();
+    if (!prevPlaces.some((p) => p.id === selectedPlace.id)) {
+      this.userPlaces.set([...prevPlaces, selectedPlace]);
+    }
+
+    return this.http
+      .put<{ userPlaces: Place[] }>('http://localhost:3000/user-places', {
+        placeId: selectedPlace.id,
+      })
+      .pipe(
+        catchError((error) => {
+          return throwError(() => new Error('Failed to store selected place'));
+        })
+      );
   }
 
   private fetchPlaces(url: string) {
