@@ -33,10 +33,7 @@ export class AvailablePlacesComponent {
 
   onSelect(selectedPlace: Place) {
     this.placesService.addPlaceToUserPlaces(selectedPlace).subscribe({
-      next: (resData) => {
-        
-        console.log(resData.userPlaces);
-      },
+      
       error: (error) => console.log(error),
     });
   }

@@ -56,4 +56,12 @@ export class PlacesService {
       })
     );
   }
+
+  removeUserPlaces(selectedPlace: Place) {
+    const prevPlaces = this.userPlaces();
+    if (prevPlaces.some((p) => p.id === selectedPlace.id)) {
+      this.userPlaces.set(prevPlaces.filter((p) => p.id !== selectedPlace.id));
+    }
+    return this.http.delete(`http://localhost:3000/user-places/${selectedPlace.id}`)
+  }
 }
